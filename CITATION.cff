@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite both the software and the paper."
+title: "Doppler-based Spatial-Temporal Point Processing (STPP) for in-cabin hand gesture recognition"
+authors:
+  - family-names: Ji
+    given-names: Youngseo
+    affiliation: "Chungnam National University"
+  - family-names: Kim
+    given-names: Jinha
+    affiliation: "Chungnam National University"
+  - family-names: Kim
+    given-names: Hyeongwoo
+    affiliation: "Chungnam National University"
+  - family-names: Jeong
+    given-names: Yewon
+    affiliation: "Chungnam National University"
+  - family-names: Kim
+    given-names: Byungkwan
+    affiliation: "Chungnam National University"
+    email: byungkwan.kim@cnu.ac.kr
+version: 1.0.0
+date-released: 2026-06-15
+license: MIT
+repository-code: "https://github.com/remilab-cnu/incabin-gesture-doppler-stpp"
+# After depositing on Zenodo, add the DOI here:
+# doi: 10.5281/zenodo.XXXXXXX
+preferred-citation:
+  type: article
+  title: "In-cabin Hand Gesture Recognition Using Doppler-based Spatial Temporal Point Processing"
+  authors:
+    - family-names: Ji
+      given-names: Youngseo
+    - family-names: Kim
+      given-names: Jinha
+    - family-names: Kim
+      given-names: Hyeongwoo
+    - family-names: Jeong
+      given-names: Yewon
+    - family-names: Kim
+      given-names: Byungkwan
+  year: 2026

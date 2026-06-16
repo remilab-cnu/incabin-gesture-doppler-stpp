@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+venv/
+*.h5
+*.weights.h5
+*.npy
+*.npz
+runs/
+# generated spectra output at the repo root (NOT the data/ code package
+# under sota_baselines/pointcloud_sota_2025/, which must ship)
+/data/
+sota_baselines/pointcloud_sota_2025/results/
+*.csv
+!requirements.txt
+.ipynb_checkpoints/
