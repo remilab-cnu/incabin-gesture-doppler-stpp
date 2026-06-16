@@ -22,7 +22,7 @@ version: 1.0.1
 date-released: 2026-06-16
 license: MIT
 repository-code: "https://github.com/remilab-cnu/incabin-gesture-doppler-stpp"
-doi: 10.5281/zenodo.20719616
+doi: 10.5281/zenodo.20719615
 preferred-citation:
   type: article
   title: "In-cabin Hand Gesture Recognition Using Doppler-based Spatial Temporal Point Processing"

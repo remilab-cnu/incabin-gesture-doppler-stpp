@@ -1,6 +1,6 @@
 # In-cabin Hand Gesture Recognition — Doppler-based Spatial-Temporal Point Processing (STPP)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20719616.svg)](https://doi.org/10.5281/zenodo.20719616)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20719615.svg)](https://doi.org/10.5281/zenodo.20719615)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Reference implementation for the paper
