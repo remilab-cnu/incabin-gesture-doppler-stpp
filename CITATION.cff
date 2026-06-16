@@ -18,8 +18,8 @@ authors:
     given-names: Byungkwan
     affiliation: "Chungnam National University"
     email: byungkwan.kim@cnu.ac.kr
-version: 1.0.0
-date-released: 2026-06-15
+version: 1.0.1
+date-released: 2026-06-16
 license: MIT
 repository-code: "https://github.com/remilab-cnu/incabin-gesture-doppler-stpp"
 doi: 10.5281/zenodo.20719616
