@@ -67,4 +67,53 @@ git clone -q --filter=blob:none --no-checkout "file://$PWD" "$D/n2" 2>/dev/null
 cd "$D/n2"
 n2=$(sh "$W/.githooks/check-large-files.sh" --new HEAD origin/already-remote >/dev/null 2>&1; echo $?)
 echo "N2 unrelated history and a new 6 MB npz (expect 1): $n2"
+# N4: explicit blob wants must not negotiate commits whose blobs are missing.
+cd "$D/r"
+git switch -q --orphan n4
+printf 'base\n' > base.txt; git add base.txt; c n4-base; n4_base=$(git rev-parse HEAD)
+printf 'small\n' > small.txt; git add small.txt; c n4-small; n4_small=$(git rev-parse HEAD)
+head -c 6000000 /dev/urandom > large.npz; git add large.npz; c n4-large; n4_large=$(git rev-parse HEAD)
+# Force only the script's batch fetch to fail; Git's internal lazy fetch still uses
+# the real Git. Fresh clones keep each check independent of earlier downloads.
+real_git=$(command -v git)
+mkdir "$D/bin"
+cat > "$D/bin/git" <<'EOF'
+#!/bin/sh
+if [ "${N4_FAIL_BATCH:-0}" = 1 ]; then
+    for arg do
+        if [ "$arg" = --stdin ]; then
+            echo forced-batch-failure >&2
+            exit 1
+        fi
+    done
+fi
+exec "$N4_REAL_GIT" "$@"
+EOF
+chmod +x "$D/bin/git"
+for mode in batch fallback; do
+    for kind in small large; do
+        case $kind in
+            small) n4_head=$n4_small; n4_path=small.txt; expected=0 ;;
+            large) n4_head=$n4_large; n4_path=large.npz; expected=1 ;;
+        esac
+        git clone -q --filter=blob:none --no-checkout "file://$D/r" "$D/n4-$mode-$kind" 2>/dev/null
+        cd "$D/n4-$mode-$kind"
+        oid=$(git rev-parse "$n4_head:$n4_path")
+        missing=$(git rev-list --objects --missing=print "$n4_head" | grep -cx "?$oid")
+        echo "N4 $mode $kind blob initially missing (expect 1): $missing"
+        fail_batch=0; [ "$mode" = fallback ] && fail_batch=1
+        PATH="$D/bin:$PATH" N4_REAL_GIT="$real_git" N4_FAIL_BATCH=$fail_batch \
+            GIT_TRACE_PACKET="$D/n4-$mode-$kind.packet" \
+            sh "$W/.githooks/check-large-files.sh" --new "$n4_head" "$n4_base" > "$D/n4-$mode-$kind.log" 2>&1
+        echo "N4 $mode $kind (expect $expected): $?"
+        if [ "$mode" = batch ]; then
+            # Exit codes alone also pass when a broken batch is rescued lazily.
+            haves=$(grep -c 'fetch> have ' "$D/n4-$mode-$kind.packet")
+            echo "N4 batch $kind advertises no haves (expect 0): $haves"
+        else
+            forced=$(grep -c '^forced-batch-failure$' "$D/n4-$mode-$kind.log")
+            echo "N4 fallback $kind exercised (expect 1): $forced"
+        fi
+    done
+done
 cd / && rm -rf "${D:?}"
