@@ -113,7 +113,15 @@ else
     if [ "$fetched" -gt 0 ]; then
         split -l 5000 "$work/missing" "$work/batch-" || exit 2
         for batch in "$work"/batch-*; do
-            git fetch --no-tags --no-write-fetch-head --stdin origin < "$batch" || exit 2
+            # Having a commit in a partial clone does not mean we have its blobs.
+            # Do not advertise those commits as haves when asking for missing blobs.
+            if ! git -c fetch.negotiationAlgorithm=noop fetch --no-tags --no-write-fetch-head --stdin origin < "$batch"; then
+                # A failed batch may have supplied some objects. Read each requested
+                # blob, letting the promisor fetch anything still missing lazily.
+                while IFS= read -r oid; do
+                    git cat-file blob "$oid" > /dev/null || exit 2
+                done < "$batch"
+            fi
         done
     fi
     for c in $commits; do
